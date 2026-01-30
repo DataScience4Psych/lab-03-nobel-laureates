@@ -17,6 +17,8 @@ nobel <- read_csv("data/nobel.csv")
 
 ## Exercises
 
+Here is a link to the [lab instructions](https://datascience4psych.github.io/DataScience4Psych/lab03.html).
+
 ### Exercise 1
 
 Remove this text, and add your answer for Exercise 1 here.
