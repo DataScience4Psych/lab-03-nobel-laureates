@@ -7,7 +7,11 @@ library(ggplot2)
 library(tidyr)
 
 # load and process data
-laureates <- read_csv("http://api.nobelprize.org/v1/laureate.csv") %>%
+laureates <- read_csv("http://api.nobelprize.org/v1/laureate.csv",
+  show_col_types = FALSE,
+  name_repair = "unique_quiet",
+  lazy = TRUE
+) %>%
   mutate(
     born_country_original = bornCountry,
     born_country_cleaned = ifelse(grepl("now ", bornCountry),
@@ -123,8 +127,11 @@ cleaned_laureates <- cleaned_laureates %>%
       #    9 David        Baker       NA        NA
       firstname == "David" & surname == "Baker" & is.na(born_date) ~ as.Date("1962-10-06"),
       #    10 John         Jumper      NA        NA
+      firstname == "John" & surname == "Jumper" & is.na(born_date) ~ as.Date("1985-01-01"),
       #    11 Simon        Johnson     NA        NA
+      firstname == "Simon" & surname == "Johnson" & is.na(born_date) ~ as.Date("1963-01-13"),
       #    12 James        Robinson    NA        NA
+
       #    13 Mary E.      Brunkow     NA        NA
       #   14 John         Clarke      NA        NA
       #    15 Michel H.    Devoret     NA        NA
