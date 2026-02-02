@@ -37,6 +37,23 @@ laureates <- read_csv("http://api.nobelprize.org/v1/laureate.csv") %>%
     country_cleaned = gsub(")", "", country_cleaned),
     category = toTitleCase(category),
     instance = paste0(id, "_", year, "_", category)
+  ) %>%
+  arrange(id, year, category) %>%
+  mutate(
+    overallMotivation = gsub("\n", " ", overallMotivation),
+    overallMotivation = gsub('"', "'", overallMotivation),
+    motivation = gsub("\n", " ", motivation),
+    motivation = gsub('"', "'", motivation),
+    # if starts with "the ", remove it
+    born_country_cleaned = ifelse(grepl("^the ", born_country_cleaned),
+      sub("^the ", "", born_country_cleaned), born_country_cleaned
+    ),
+    died_country_cleaned = ifelse(grepl("^the ", died_country_cleaned),
+      sub("^the ", "", died_country_cleaned), died_country_cleaned
+    ),
+    country_cleaned = ifelse(grepl("^the ", country_cleaned),
+      sub("^the ", "", country_cleaned), country_cleaned
+    )
   )
 
 
