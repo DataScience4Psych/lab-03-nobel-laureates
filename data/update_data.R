@@ -104,16 +104,24 @@ cleaned_laureates <- cleaned_laureates %>%
       firstname == "Paul M." & surname == "Romer" & is.na(born_date) ~ as.Date("1955-11-06"),
       #  5 Michael     Houghton     NA        NA
       firstname == "Michael" & surname == "Houghton" & is.na(born_date) ~ as.Date("1949-01-01"),
-
       #    1 Ardem        Patapoutian NA        NA
+      firstname == "Ardem" & surname == "Patapoutian" & is.na(born_date) ~ as.Date("1967-10-01"),
       #     2 Abdulrazak   Gurnah      NA        NA
+      firstname == "Abdulrazak" & surname == "Gurnah" & is.na(born_date) ~ as.Date("1948-12-20"),
       #    3 David        Card        NA        NA
+      firstname == "David" & surname == "Card" & is.na(born_date) ~ as.Date("1956-01-01"),
       #    4 Morten       Meldal      NA        NA
+      firstname == "Morten" & surname == "Meldal" & is.na(born_date) ~ as.Date("1954-01-16"),
       #     5 Moungi       Bawendi     NA        NA
+      firstname == "Moungi" & surname == "Bawendi" & is.na(born_date) ~ as.Date("1961-03-15"),
       #    6 Aleksey      Yekimov     NA        NA
+      firstname == "Aleksey" & surname == "Yekimov" & is.na(born_date) ~ as.Date("1945-01-01"),
       #    7 Claudia      Goldin      NA        NA
+      firstname == "Claudia" & surname == "Goldin" & is.na(born_date) ~ as.Date("1946-05-14"),
       #     8 Gary         Ruvkun      NA        NA
+      firstname == "Gary" & surname == "Ruvkun" & is.na(born_date) ~ as.Date("1957-03-26"),
       #    9 David        Baker       NA        NA
+      firstname == "David" & surname == "Baker" & is.na(born_date) ~ as.Date("1962-10-06"),
       #    10 John         Jumper      NA        NA
       #    11 Simon        Johnson     NA        NA
       #    12 James        Robinson    NA        NA
@@ -135,3 +143,10 @@ if (FALSE) {
 }
 nobel <- cleaned_laureates
 write_csv(nobel, "data/nobel.csv")
+write.table(
+  paste0(
+    "Last updated: ",
+    format(Sys.Date(), "%Y-%m-%d")
+  ),
+  file = "data/nobel_date.txt"
+)
