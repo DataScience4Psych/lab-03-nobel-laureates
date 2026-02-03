@@ -7,12 +7,28 @@ library(ggplot2)
 library(tidyr)
 
 # load and process data
-laureates <- read_csv("http://api.nobelprize.org/v1/laureate.csv",
-  show_col_types = FALSE,
+laureates <- read_csv("https://api.nobelprize.org/v1/laureate.csv",
+  col_types = cols(.default = col_character()),
   name_repair = "unique_quiet",
   lazy = TRUE
-) %>%
+)
+
+
+laureates <- laureates %>%
   mutate(
+    year = as.integer(year),
+    share = as.integer(share),
+    id = as.integer(id),
+    born = case_when(
+      born == "0000-00-00" ~ NA_character_,
+      TRUE ~ born
+    ),
+    born = as.Date(born),
+    died = case_when(
+      died == "0000-00-00" ~ NA_character_,
+      TRUE ~ died
+    ),
+    died = as.Date(died),
     born_country_original = bornCountry,
     born_country_cleaned = ifelse(grepl("now ", bornCountry),
       word(bornCountry, -1), bornCountry
@@ -93,7 +109,7 @@ cleaned_laureates <- subset(laureates, !duplicated(laureates$instance)) %>% sele
   city_original,
   country_original
 )
-
+# fill in missing birth dates based on external information
 cleaned_laureates <- cleaned_laureates %>%
   mutate(
     born_date = case_when(
@@ -131,21 +147,24 @@ cleaned_laureates <- cleaned_laureates %>%
       #    11 Simon        Johnson     NA        NA
       firstname == "Simon" & surname == "Johnson" & is.na(born_date) ~ as.Date("1963-01-13"),
       #    12 James        Robinson    NA        NA
-
+      firstname == "James" & surname == "Robinson" & is.na(born_date) ~ as.Date("1960-01-01"), # https://en.wikipedia.org/wiki/James_A._Robinson
       #    13 Mary E.      Brunkow     NA        NA
+      firstname == "Mary E." & surname == "Brunkow" & is.na(born_date) ~ as.Date("1961-01-01"),
       #   14 John         Clarke      NA        NA
+      firstname == "John" & surname == "Clarke" & is.na(born_date) ~ as.Date("1942-02-10"),
       #    15 Michel H.    Devoret     NA        NA
+      firstname == "Michel H." & surname == "Devoret" & is.na(born_date) ~ as.Date("1953-01-01"),
       #    16 John M.      Martinis    NA        NA
+      firstname == "John M." & surname == "Martinis" & is.na(born_date) ~ as.Date("1958-01-01"),
       #    17 Maria Corina Machado     NA        NA
-
-
+      firstname == "Maria Corina" & surname == "Machado" & is.na(born_date) ~ as.Date("1967-10-07"),
       TRUE ~ born_date
     )
   )
 # fill in missing information
 if (FALSE) {
   cleaned_laureates %>%
-    filter(is.na(born_date) & is.na(died_date) & gender != "org") %>%
+    filter(is.na(born_date) & gender != "org") %>%
     select(firstname, surname, born_date, died_date)
 }
 nobel <- cleaned_laureates
@@ -157,3 +176,5 @@ write.table(
   ),
   file = "data/nobel_date.txt"
 )
+
+remove(laureates, cleaned_laureates)
