@@ -112,6 +112,11 @@ cleaned_laureates <- subset(laureates, !duplicated(laureates$instance)) %>% sele
 # fill in missing birth dates based on external information
 cleaned_laureates <- cleaned_laureates %>%
   mutate(
+    died_date = case_when(
+      firstname == "Nansen International Office for Refugees" & is.na(died_date) ~ as.Date("1939-01-01"),
+      TRUE ~ died_date
+    ),
+
     born_date = case_when(
       firstname == "Albert" & surname == "Lutuli" & is.na(born_date) ~ as.Date("1898-01-01"),
       firstname == "Louis" & surname == "Brus" & is.na(born_date) ~ as.Date("1943-08-10"),
@@ -158,6 +163,52 @@ cleaned_laureates <- cleaned_laureates %>%
       firstname == "John M." & surname == "Martinis" & is.na(born_date) ~ as.Date("1958-01-01"),
       #    17 Maria Corina Machado     NA        NA
       firstname == "Maria Corina" & surname == "Machado" & is.na(born_date) ~ as.Date("1967-10-07"),
+      # Organizations
+      #  1 Institute of International Law           NA        NA
+      firstname == "Institute of International Law" & is.na(born_date) ~ as.Date("1873-09-08"),
+      # 2 Permanent International Peace Bureau     NA        NA
+      firstname == "Permanent International Peace Bureau" & is.na(born_date) ~ as.Date("1891-11-13"),
+      # 3 International Committee of the Red Cross NA        NA
+      firstname == "International Committee of the Red Cross" & is.na(born_date) ~ as.Date("1863-02-17"),
+      # 6 Nansen International Office for Refugees NA        NA
+      firstname == "Nansen International Office for Refugees" & is.na(born_date) ~ as.Date("1930-01-01"),
+      # 7 Friends Service Council
+      firstname == "Friends Service Council" & is.na(born_date) ~ as.Date("1947-01-01"),
+      # 8 American Friends Service Committee       NA        NA
+      firstname == "American Friends Service Committee" & is.na(born_date) ~ as.Date("1917-04-30"),
+      # 9 League of Red Cross Societies            NA        NA
+      firstname == "League of Red Cross Societies" & is.na(born_date) ~ as.Date("1919-05-05"),
+      # 10 United Nations Children's Fund           NA        NA
+      firstname == "United Nations Children's Fund" & is.na(born_date) ~ as.Date("1946-12-11"),
+      #      1 International Labour Organization                    NA        NA
+      firstname == "International Labour Organization" & is.na(born_date) ~ as.Date("1919-04-11"),
+      #     2 Amnesty International                                NA        NA
+      firstname == "Amnesty International" & is.na(born_date) ~ as.Date("1961-07-15"),
+      #     3 International Physicians for the Prevention of Nucl… NA
+      firstname == "International Physicians for the Prevention of Nuclear War" & is.na(born_date) ~ as.Date("1980-01-01"),
+      #     4 United Nations Peacekeeping Forces                   NA        NA
+      firstname == "United Nations Peacekeeping Forces" & is.na(born_date) ~ as.Date("1945-01-01"),
+      #     5 Pugwash Conferences on Science and World Affairs     NA        NA
+      firstname == "Pugwash Conferences on Science and World Affairs" & is.na(born_date) ~ as.Date("1957-01-01"),
+      #     6 International Campaign to Ban Landmines              NA        NA
+      firstname == "International Campaign to Ban Landmines" & is.na(born_date) ~ as.Date("1992-10-01"),
+      #     7 Doctors Without Borders                              NA        NA
+      firstname == "Doctors Without Borders" & is.na(born_date) ~ as.Date("1971-12-22"),
+      #     8 United Nations                                       NA        NA
+      firstname == "United Nations" & is.na(born_date) ~ as.Date("1945-06-26"),
+      #     9 International Atomic Energy Agency                   NA        NA
+      firstname == "International Atomic Energy Agency" & is.na(born_date) ~ as.Date("1957-07-29"),
+      #     10 Grameen Bank                                         NA        NA
+      #     11 Intergovernmental Panel on Climate Change            NA        NA
+      #     12 European Union                                       NA        NA
+      #    13 Organisation for the Prohibition of Chemical Weapons NA        NA
+      #     14 National Dialogue Quartet                            NA        NA
+      #     15 International Campaign to Abolish Nuclear Weapons    NA        NA
+      #    16 World Food Programme                                 NA        NA
+      #    17 Memorial                                             NA        NA
+      #    18 Center for Civil Liberties                           NA        NA
+
+
       TRUE ~ born_date
     )
   )
@@ -165,7 +216,14 @@ cleaned_laureates <- cleaned_laureates %>%
 if (FALSE) {
   cleaned_laureates %>%
     filter(is.na(born_date) & gender != "org") %>%
-    select(firstname, surname, born_date, died_date)
+    select(firstname, surname, born_date, died_date, category)
+
+  cleaned_laureates %>%
+    filter(is.na(born_date) & gender == "org") %>%
+    select(firstname, born_date, died_date)
+
+
+
 }
 nobel <- cleaned_laureates
 write_csv(nobel, "data/nobel.csv")
