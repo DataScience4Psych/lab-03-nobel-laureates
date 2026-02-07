@@ -112,11 +112,30 @@ cleaned_laureates <- subset(laureates, !duplicated(laureates$instance)) %>% sele
 # fill in missing birth dates based on external information
 cleaned_laureates <- cleaned_laureates %>%
   mutate(
+    country = case_when(
+      firstname == "Marie" & surname == "Curie" & is.na(country) ~ "France",
+      firstname == "Martinus J.G." & surname == "Veltman" & is.na(country) ~ "Netherlands",
+      firstname == "Kary B." & surname == "Mullis" & is.na(country) ~ "USA",
+      firstname == "Gunnar" & surname == "Myrdal" & is.na(country) ~ "Sweden",
+      firstname == "Friedrich" & surname == "von Hayek" & is.na(country) ~ "United Kingdom",
+
+      #  1 William   Knowles 1917-06-01 Chemistry NA
+      firstname == "William" & surname == "Knowles" & is.na(country) ~ "USA",
+      #  2 J. Robin  Warren  1937-06-11 Medicine  NA
+      firstname == "J. Robin" & surname == "Warren" & is.na(country) ~ "Australia",
+
+      #  3 Rainer    Weiss   1932-09-29 Physics   NA
+      firstname == "Rainer" & surname == "Weiss" & is.na(country) ~ "USA",
+      #  4 Barry C.  Barish  1936-01-27 Physics   NA
+      firstname == "Barry C." & surname == "Barish" & is.na(country) ~ "USA",
+      # 5 Kip S.    Thorne  1940-06-01 Physics   NA
+      firstname == "Kip S." & surname == "Thorne" & is.na(country) ~ "USA",
+      TRUE ~ country
+    ),
     died_date = case_when(
       firstname == "Nansen International Office for Refugees" & is.na(died_date) ~ as.Date("1939-01-01"),
       TRUE ~ died_date
     ),
-
     born_date = case_when(
       firstname == "Albert" & surname == "Lutuli" & is.na(born_date) ~ as.Date("1898-01-01"),
       firstname == "Louis" & surname == "Brus" & is.na(born_date) ~ as.Date("1943-08-10"),
@@ -222,8 +241,10 @@ if (FALSE) {
     filter(is.na(born_date) & gender == "org") %>%
     select(firstname, born_date, died_date)
 
-
-
+  cleaned_laureates %>%
+    filter(gender != "org" & is.na(country) & !category %in% c("Literature", "Peace")) %>%
+    select(firstname, surname, born_date, category, country) %>%
+    arrange(category)
 }
 nobel <- cleaned_laureates
 write_csv(nobel, "data/nobel.csv")
