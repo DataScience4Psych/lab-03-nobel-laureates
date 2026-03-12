@@ -218,8 +218,10 @@ cleaned_laureates <- cleaned_laureates %>%
       #     9 International Atomic Energy Agency                   NA        NA
       firstname == "International Atomic Energy Agency" & is.na(born_date) ~ as.Date("1957-07-29"),
       #     10 Grameen Bank                                         NA        NA
+      firstname == "Grameen Bank" & is.na(born_date) ~ as.Date("1983-10-02"),
       #     11 Intergovernmental Panel on Climate Change            NA        NA
       #     12 European Union                                       NA        NA
+      firstname == "European Union" & is.na(born_date) ~ as.Date("1993-11-01"),
       #    13 Organisation for the Prohibition of Chemical Weapons NA        NA
       #     14 National Dialogue Quartet                            NA        NA
       #     15 International Campaign to Abolish Nuclear Weapons    NA        NA
